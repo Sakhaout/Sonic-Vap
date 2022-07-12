@@ -30,7 +30,7 @@ public class BaseClass {
         HashMap<String, Object> chromePrefs = new HashMap<>();
         chromePrefs.put("profile.default_content_settings.popups", 0);
         options.addArguments("--incognito");
-        options.addArguments("--headless");
+//        options.addArguments("--headless");
         options.addArguments("window-size=1920,681");
         options.addArguments("disable-infobars");
         options.addArguments("--disable-gpu");
@@ -47,7 +47,7 @@ public class BaseClass {
         logger.info("URL Entered: " + url);
     }
 
-    public static void driverInitialize() {
+    public static void driverInitialization() {
         driverInitialization(browsePreSetUp());
         driverSetUp("https://sonicvapeusa.com/");
     }
