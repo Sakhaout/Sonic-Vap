@@ -6,23 +6,30 @@ import org.apache.log4j.Logger;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
+
+import java.io.FileInputStream;
+import java.io.IOException;
 import java.util.HashMap;
+import java.util.Properties;
 import java.util.concurrent.TimeUnit;
 
 public class BaseClass {
     private static final Logger logger = LogManager.getLogger(BaseClass.class);
     public static WebDriver driver = null;
     public static int PAGE_LOAD_TIMEOUT = 15;
+    public static Properties config = null;
+
+    private static void loadConfigProperty() throws IOException {
+        config = new Properties();
+        String path = "/src/main/resources/config.properties";
+        FileInputStream ip = new FileInputStream(System.getProperty("user.dir") + path);
+        config.load(ip);
+    }
 
     private static void driverInitialization(Object capabilities) {
-        try {
-            WebDriverManager.chromedriver().setup();
-            driver = new ChromeDriver((ChromeOptions) capabilities);
-            logger.info("Browser is Opening");
-        } catch (Exception e) {
-            e.printStackTrace();
-            logger.error("NOT able to open the Browser");
-        }
+        WebDriverManager.chromedriver().setup();
+        driver = new ChromeDriver((ChromeOptions) capabilities);
+        logger.info("Browser is Opening");
     }
 
     private static ChromeOptions browsePreSetUp() {
@@ -48,7 +55,12 @@ public class BaseClass {
     }
 
     public static void driverInitialization() {
-        driverInitialization(browsePreSetUp());
-        driverSetUp("https://sonicvapeusa.com/");
+        try {
+            loadConfigProperty();
+            driverInitialization(browsePreSetUp());
+            driverSetUp(config.getProperty("url"));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 }
