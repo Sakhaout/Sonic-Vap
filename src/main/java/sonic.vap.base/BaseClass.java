@@ -3,12 +3,16 @@ package sonic.vap.base;
 import io.github.bonigarcia.wdm.WebDriverManager;
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
+import org.openqa.selenium.Capabilities;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
+import org.openqa.selenium.remote.RemoteWebDriver;
 
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.HashMap;
 import java.util.Properties;
 import java.util.concurrent.TimeUnit;
@@ -26,9 +30,10 @@ public class BaseClass {
         config.load(ip);
     }
 
-    private static void driverInitialization(Object capabilities) {
+    private static void driverInitialization(Object capabilities) throws MalformedURLException {
+        String remoteUrl = "http://localhost:4444/wd/hub";
         WebDriverManager.chromedriver().setup();
-        driver = new ChromeDriver((ChromeOptions) capabilities);
+        driver = new RemoteWebDriver(new URL(remoteUrl), (Capabilities) capabilities);
         logger.info("Browser is Opening");
     }
 
